@@ -5,6 +5,8 @@ const IframePage = () => {
 
   useEffect(() => {
     const receiveMessage = event => {
+      // Ensure messages are received from same-origin
+      if (event.origin !== window.location.origin) return;
       const receivedMsg = event.data;
       setMessages(prevMessages => [
         ...prevMessages,
@@ -23,7 +25,7 @@ const IframePage = () => {
     // Send a message back to the parent
     const replyMsg = `from iframe @${new Date().getTime()}`;
     setMessages(prevMessages => [...prevMessages, `Sent: ${replyMsg}`]);
-    window.parent.postMessage(replyMsg, "*");
+    window.parent.postMessage(replyMsg, window.location.origin); // specify target origin
   };
 
   return (
